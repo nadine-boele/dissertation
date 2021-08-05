@@ -1,0 +1,145 @@
+<body oncontextmenu="return false">
+
+<video style="center" poster="Link zum Standbild" id="video" width="100%"> 
+            <source src="Link zum Video" type="video/mp4"/>
+            </video>
+            
+            <img style="display: none;" id="standbild" src="Link zum Standbild"  width="100%">
+            
+            <button type="button" id="videostart" onclick="start()">Video starten</button> 
+            <button type="button" style="display:none;" id="videopause" onclick="pause()"><img src="Link zum Pausen-Bild" width="13" height="13" alt="Pause"></button> 
+            <button type="button" style="display:none;" id="videoweiter" onclick="vidweiter()"><img src="Link zum Start-Bild" width="13" height="13" alt="Weiter"></button> 
+            
+            <button type="button" style="display:none;" id="beobachtungnotieren" onclick="textboxShow()">Beobachtung notieren </button> 
+            <button type="button" style="display:none;" id="videozuende" onclick="ende()">Video zu Ende gesehen </button> 
+            
+           <div id="infoBox" style="width: 857px; padding: 10px; border: 2px solid #CCCCCC">
+            <label for="Beob">Notieren Sie bitte <b>kurz</b> und <b>stichwortartig</b> Ihre Gründe für das Stoppen.<br><br> </label ><textarea id="Beobachtung" name="vname" cols="138" rows="3"></textarea>
+            <p> 
+            <button type="button" id="speichern" onclick="textboxHide()">Video fortsetzen</button> 
+            </p>
+            </div>
+
+            
+            <script type="text/javascript">
+           
+          
+          var info = document.getElementById("infoBox");
+          info.style.display = "none"; 
+          info.style.position = "relative";
+          info.style.zIndex = 999;
+          info.style.marginTop = "10px";
+          
+          var vid = document.getElementById("video");
+          var standbild = document.getElementById("standbild");
+          
+          var videostart = document.getElementById("videostart");
+          var videopause = document.getElementById("videopause");
+          var videoweiter = document.getElementById("videoweiter");
+          var beobachtungnotieren = document.getElementById("beobachtungnotieren");
+          var videozuende = document.getElementById("videozuende");
+          var weiter = document.getElementById("weiter");
+          
+          var i=1;
+          
+          function start(){
+            videostart.style.display ="none";
+            videopause.style.display = "";
+            videoweiter.style.display = "none";
+            beobachtungnotieren.style.display = "";
+            videozuende.style.display = "";
+            vid.play();
+          }
+          
+          function pause(){
+            videopause.style.display = "none";
+            videoweiter.style.display = "";
+            beobachtungnotieren.style.display = "none";
+            videozuende.style.display = "none";
+            
+            vid.pause();
+            vid.style.display = "none";
+            
+            standbild.style.display = "";
+          }
+          
+          function vidweiter(){
+            videopause.style.display = "";
+            videoweiter.style.display = "none";
+            beobachtungnotieren.style.display = "";
+            videozuende.style.display = "";
+            
+            standbild.style.display = "none";
+            
+            vid.style.display = "";
+            vid.play();
+            
+          }
+          
+          function textboxShow(){
+            info.style.display = "";
+            
+            videopause.style.display = "none";
+            videoweiter.style.display = "none";
+            beobachtungnotieren.style.display = "none";
+            videozuende.style.display = "none";
+            
+            vid.pause();
+            vid.style.display = "none";
+            
+            standbild.style.display = "";
+          }
+          
+          function textboxHide(){
+            var itemID = String(i);
+            
+            if(itemID.length < 2) itemID = "0" + itemID;
+            document.getElementById("A103_" + itemID).value = vid.currentTime;
+document.getElementById("A104_" + itemID).value = document.querySelector("#Beobachtung").value; 
+i++; 
+
+document.getElementById("Beobachtung").value = "";
+
+info.style.display = "none";
+
+var s = vid.currentTime;
+var l = vid.duration;
+  
+if(s==l){ 
+  videozuende.style.display = "";
+}  
+else{
+  videopause.style.display = "";
+  videoweiter.style.display = "none";
+  beobachtungnotieren.style.display = "";
+  videozuende.style.display = "";
+
+  standbild.style.display = "none";
+
+  vid.style.display = "";
+  vid.play();
+}
+}
+
+function ende(){
+  var s = vid.currentTime;
+  var l = vid.duration;
+  
+  if(s==l){ 
+    window.setTimeout(SoSciTools.submitButtonsDisplay, 200);
+  } 
+  
+  else{
+    vid.pause();
+    vid.style.display ="none";
+    standbild.style.display ="";
+
+    window.alert("Schauen Sie sich das Video bitte bis zum Ende an. Danke.");
+
+    vid.style.display ="";
+    standbild.style.display ="none";
+    vid.play();
+  } 
+}
+
+</script>
