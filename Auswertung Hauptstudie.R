@@ -235,268 +235,6 @@ for(i in items){
 data <- data[,-pos]
 
 
-###### Einlesen und Aufbereiten der offenen Antworten ######
-data.offen1 <- read.csv2("/Users/nadineboele/Desktop/Promotion/Hauptstudie (doppelt kodiert).csv")
-data.offen1 <- data.offen1[-which(data.offen1$cid%in%c(7:25,30:33,37)),]
-data.offen1$cid[which(data.offen1$cid%in%c(4,6,35))] <- 6
-data.offen1$cid[which(data.offen1$cid==5)] <- 4
-data.offen1$cid[which(data.offen1$cid==34)] <- 5
-data.offen1$cid[which(data.offen1$cid==36)] <- 7
-data.offen1$cid[which(data.offen1$cid==26)] <- 8
-data.offen1$cid[which(data.offen1$cid==27)] <- 9
-data.offen1$cid[which(data.offen1$cid==28)] <- 10
-data.offen1$cid[which(data.offen1$cid==29)] <- 11
-data.offen1$fid[which(data.offen1$fid==11)] <- 1
-data.offen1$fid[which(data.offen1$fid==12)] <- 2
-data.offen1$fid[which(data.offen1$fid==13)] <- 3
-data.offen1$fid[which(data.offen1$fid==14)] <- 4
-data.offen1$fid[which(data.offen1$fid==15)] <- 5
-data.offen1$fid[which(data.offen1$fid==16)] <- 6
-data.offen1$fid[which(data.offen1$fid==17)] <- 7
-data.offen1$fid[which(data.offen1$fid==18)] <- 8
-data.offen1$fid[which(data.offen1$fid==19)] <- 9
-data.offen1$fid[which(data.offen1$fid==20)] <- 10 
-data.offen1$fid <- data.offen1$fid+98
-
-data.offen2 <- read.csv2("/Users/nadineboele/Desktop/Promotion/Hauptstudie.csv")
-data.offen <- rbind(data.offen2,data.offen1)
-fid <- read.csv2("/Users/nadineboele/Desktop/Promotion/Code.csv")
-
-for(i in 1:nrow(fid)){
-  data.offen$fid[which(data.offen$fid==fid$id[i])] <- fid$name[i]
-}
-
-data$freq_KF <- NA
-data$freq_LU <- NA
-data$freq_FD <- NA
-data$freq_SA <- NA
-data$freq_AB <- NA
-data$freq_T <- NA
-data$freq_S <- NA
-data$freq_Beschreiben <- NA
-data$freq_Bewerten <- NA
-data$freq_Begründen <- NA
-data$freq_Alternative <- NA
-data$freq_BeschreibenT <- NA
-data$freq_BewertenT <- NA
-data$freq_BegründenT <- NA
-data$freq_AlternativeT <- NA
-data$freq_BewertenF <- NA
-data$freq_BegründenF <- NA
-data$freq_AlternativeF <- NA
-
-fid$freq_KF <- NA
-fid$freq_LU <- NA
-fid$freq_FD <- NA
-fid$freq_SA <- NA
-fid$freq_AB <- NA
-fid$freq_T <- NA
-fid$freq_S <- NA
-fid$freq_FF <- NA
-fid$freq_Beschreiben <- NA
-fid$freq_Bewerten <- NA
-fid$freq_Begründen <- NA
-fid$freq_Alternative <- NA
-fid$freq_BeschreibenT <- NA
-fid$freq_BewertenT <- NA
-fid$freq_BegründenT <- NA
-fid$freq_AlternativeT <- NA
-fid$freq_BewertenF <- NA
-fid$freq_BegründenF <- NA
-fid$freq_AlternativeF <- NA
-
-### Kommentare Transkript markieren
-pos <- NA
-a=1
-for(i in 1:nrow(data.offen)){
-  if(data.offen$cid[i]==7){
-    file <- which(data.offen$fid[i]==data.offen$fid) #andere Kommentare der Gleichen Person
-    i1 <- which(data.offen$selfirst[i]<=data.offen$selfirst)
-    i2 <- which(data.offen$selend[i]>=data.offen$selend)
-    
-    for(j in 1:length(file)){
-      if(any(file[j]==i1)){
-        if(any(file[j]==i2)){
-          pos[a] <- file[j]
-          a=a+1
-        }
-      }
-    }
-  }
-}
-
-data.offen$Transkript <- NA
-data.offen$Transkript[pos] <- TRUE
-
-pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="8") #Position Beschreiben & Transkript
-data.offen$cid[pos] <- 13
-pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="9") #Position Bewerten & Transkript
-data.offen$cid[pos] <- 14
-pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="10") #Position Begründen & Transkript
-data.offen$cid[pos] <- 15
-pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="11") #Position Alternative & Transkript
-data.offen$cid[pos] <- 16
-
-
-### Kommentare fachlicher Fehler markieren
-pos <- NA
-a=1
-for(i in 1:nrow(data.offen)){
-  if(data.offen$cid[i]==12){
-    file <- which(data.offen$fid[i]==data.offen$fid) #andere Kommentare der Gleichen Person
-    i1 <- which(data.offen$selfirst[i]<=data.offen$selfirst)
-    i2 <- which(data.offen$selend[i]>=data.offen$selend)
-    
-    for(j in 1:length(file)){
-      if(any(file[j]==i1)){
-        if(any(file[j]==i2)){
-          pos[a] <- file[j]
-          a=a+1
-        }
-      }
-    }
-  }
-}
-
-data.offen$Fehler <- NA
-data.offen$Fehler[pos] <- TRUE
-
-pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="9") #Position Bewerten & Transkript
-data.offen$cid[pos] <- 17
-pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="10") #Position Begründen & Transkript
-data.offen$cid[pos] <- 18
-pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="11") #Position Alternative & Transkript
-data.offen$cid[pos] <- 19
-
-##Summenwerte der einzelnen Ausprägungen bilden
-same.fid <- NA
-for(i in 1:nrow(fid)){
-  if(length(which(data.offen$fid==fid$name[i]))!=0){
-    same.fid <- which(data.offen$fid==fid$name[i])
-    table <- table(data.offen$cid[same.fid])
-    for(j in 1:length(names(table))){
-      if(names(table)[j]=="1"){
-        fid$freq_KF[i] <- table[j]
-      }
-      if(names(table)[j]=="2"){
-        fid$freq_LU[i] <- table[j]
-      }
-      if(names(table)[j]=="3"){
-        fid$freq_FD[i] <- table[j]
-      }
-      if(names(table)[j]=="4"){
-        fid$freq_SA[i] <- table[j]
-      }
-      if(names(table)[j]=="5"){
-        fid$freq_AB[i] <- table[j]
-      }
-      if(names(table)[j]=="6"){
-        fid$freq_S[i] <- table[j]
-      }
-      if(names(table)[j]=="7"){
-        fid$freq_T[i] <- table[j]
-      }
-      if(names(table)[j]=="8"){
-        fid$freq_Beschreiben[i] <- table[j]
-      }
-      if(names(table)[j]=="9"){
-        fid$freq_Bewerten[i] <- table[j]
-      }
-      if(names(table)[j]=="10"){
-        fid$freq_Begründen[i] <- table[j]
-      }
-      if(names(table)[j]=="11"){
-        fid$freq_Alternative[i] <- table[j]
-      }
-      if(names(table)[j]=="12"){
-        fid$freq_FF[i] <- table[j]
-      }
-      if(names(table)[j]=="13"){
-        fid$freq_BeschreibenT[i] <- table[j]/2
-      }
-      if(names(table)[j]=="14"){
-        fid$freq_BewertenT[i] <- table[j]/2
-      }
-      if(names(table)[j]=="15"){
-        fid$freq_BegründenT[i] <- table[j]/2
-      }
-      if(names(table)[j]=="16"){
-        fid$freq_AlternativeT[i] <- table[j]/2
-      }
-      if(names(table)[j]=="17"){
-        fid$freq_BewertenF[i] <- table[j]*0
-      }
-      if(names(table)[j]=="18"){
-        fid$freq_BegründenF[i] <- table[j]*0
-      }
-      if(names(table)[j]=="19"){
-        fid$freq_AlternativeF[i] <- table[j]*0
-      }
-    }
-  }
-}
-
-## Häufigkeiten in Datensatz kopieren ###
-for(i in 1:nrow(fid)){
-  pos <- which(data$code==fid$name[i])
-  data$freq_KF[pos] <- fid$freq_KF[i]
-  data$freq_LU[pos] <- fid$freq_LU[i]
-  data$freq_FD[pos] <- fid$freq_FD[i]
-  data$freq_SA[pos] <- fid$freq_SA[i]
-  data$freq_AB[pos] <- fid$freq_AB[i]
-  data$freq_S[pos] <- fid$freq_S[i]
-  data$freq_T[pos] <- fid$freq_T[i]
-  data$freq_Beschreiben[pos] <- fid$freq_Beschreiben[i]
-  data$freq_Bewerten[pos] <- fid$freq_Bewerten[i]
-  data$freq_Begründen[pos] <- fid$freq_Begründen[i]
-  data$freq_Alternative[pos] <- fid$freq_Alternative[i]
-  data$freq_BeschreibenT[pos] <- fid$freq_BeschreibenT[i]
-  data$freq_BewertenT[pos] <- fid$freq_BewertenT[i]
-  data$freq_BegründenT[pos] <- fid$freq_BegründenT[i]
-  data$freq_AlternativeT[pos] <- fid$freq_AlternativeT[i]
-  data$freq_BewertenF[pos] <- fid$freq_BewertenF[i]
-  data$freq_BegründenF[pos] <- fid$freq_BegründenF[i]
-  data$freq_AlternativeF[pos] <- fid$freq_AlternativeF[i]
-}
-
-## relative Häufigkeiten
-data$rel_KF <- data$freq_KF/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-data$rel_LU <- data$freq_LU/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-data$rel_FD <- data$freq_FD/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-data$rel_SA <- data$freq_SA/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-data$rel_AB <- data$freq_AB/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-data$rel_S <- data$freq_S/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
-
-data$rel_KF[which(is.na(data$rel_KF))] <- 0
-data$rel_LU[which(is.na(data$rel_LU))] <- 0
-data$rel_FD[which(is.na(data$rel_FD))] <- 0
-data$rel_SA[which(is.na(data$rel_SA))] <- 0
-data$rel_AB[which(is.na(data$rel_AB))] <- 0
-data$rel_S[which(is.na(data$rel_S))] <- 0
-
-
-data$rel_Beschreiben <- data$freq_Beschreiben/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
-data$rel_Bewerten <- data$freq_Bewerten/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
-data$rel_Begründen <- data$freq_Begründen/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
-data$rel_Alternative <- data$freq_Alternative/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
-data$rel_Beschreiben[which(is.na(data$rel_Beschreiben))] <- 0
-data$rel_Beschreiben[which(data$rel_Beschreiben==0 & is.na(data$rel_Bewerten) & is.na(data$rel_Begründen) & is.na(data$rel_Alternative))] <- NA
-
-data$freq_Beschreiben[which(is.na(data$freq_Beschreiben))] <- 0
-data$freq_BeschreibenT[which(is.na(data$freq_BeschreibenT))] <- 0
-data$freq_Bewerten[which(is.na(data$freq_Bewerten))] <- 0
-data$freq_BewertenT[which(is.na(data$freq_BewertenT))] <- 0
-data$freq_Begründen[which(is.na(data$freq_Begründen))] <- 0
-data$freq_BegründenT[which(is.na(data$freq_BegründenT))] <- 0
-data$freq_Alternative[which(is.na(data$freq_Alternative))] <- 0
-data$freq_AlternativeT[which(is.na(data$freq_AlternativeT))] <- 0
-data$freq_BewertenF[which(is.na(data$freq_BewertenF))] <- 0
-data$freq_BegründenF[which(is.na(data$freq_BegründenF))] <- 0
-data$freq_AlternativeF[which(is.na(data$freq_AlternativeF))] <- 0
-
-## Score Ebene
-data$Score.Ebene <- (rowSums(data[,c("freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)*2+data$freq_Beschreiben+data$freq_BeschreibenT*0.5 #mit Beschreiben
-
 ###### Stichprobendaten #####
 table(data$SD04) # Statusgruppe
 table(data$SD03) # Bundesland
@@ -901,6 +639,268 @@ data$R_CK17[which(data$CK17!=levels(data$CK17)[2])] <- 0
 data$R_CK18[which(data$CK18==levels(data$CK18)[1])] <- 1
 data$R_CK18[which(data$CK18!=levels(data$CK18)[1])] <- 0
 
+
+###### Einlesen und Aufbereiten der offenen Antworten ######
+data.offen1 <- read.csv2("/Users/nadineboele/Desktop/Promotion/Hauptstudie (doppelt kodiert).csv")
+data.offen1 <- data.offen1[-which(data.offen1$cid%in%c(7:25,30:33,37)),]
+data.offen1$cid[which(data.offen1$cid%in%c(4,6,35))] <- 6
+data.offen1$cid[which(data.offen1$cid==5)] <- 4
+data.offen1$cid[which(data.offen1$cid==34)] <- 5
+data.offen1$cid[which(data.offen1$cid==36)] <- 7
+data.offen1$cid[which(data.offen1$cid==26)] <- 8
+data.offen1$cid[which(data.offen1$cid==27)] <- 9
+data.offen1$cid[which(data.offen1$cid==28)] <- 10
+data.offen1$cid[which(data.offen1$cid==29)] <- 11
+data.offen1$fid[which(data.offen1$fid==11)] <- 1
+data.offen1$fid[which(data.offen1$fid==12)] <- 2
+data.offen1$fid[which(data.offen1$fid==13)] <- 3
+data.offen1$fid[which(data.offen1$fid==14)] <- 4
+data.offen1$fid[which(data.offen1$fid==15)] <- 5
+data.offen1$fid[which(data.offen1$fid==16)] <- 6
+data.offen1$fid[which(data.offen1$fid==17)] <- 7
+data.offen1$fid[which(data.offen1$fid==18)] <- 8
+data.offen1$fid[which(data.offen1$fid==19)] <- 9
+data.offen1$fid[which(data.offen1$fid==20)] <- 10 
+data.offen1$fid <- data.offen1$fid+98
+
+data.offen2 <- read.csv2("/Users/nadineboele/Desktop/Promotion/Hauptstudie.csv")
+data.offen <- rbind(data.offen2,data.offen1)
+fid <- read.csv2("/Users/nadineboele/Desktop/Promotion/Code.csv")
+
+for(i in 1:nrow(fid)){
+  data.offen$fid[which(data.offen$fid==fid$id[i])] <- fid$name[i]
+}
+
+data$freq_KF <- NA
+data$freq_LU <- NA
+data$freq_FD <- NA
+data$freq_SA <- NA
+data$freq_AB <- NA
+data$freq_T <- NA
+data$freq_S <- NA
+data$freq_Beschreiben <- NA
+data$freq_Bewerten <- NA
+data$freq_Begründen <- NA
+data$freq_Alternative <- NA
+data$freq_BeschreibenT <- NA
+data$freq_BewertenT <- NA
+data$freq_BegründenT <- NA
+data$freq_AlternativeT <- NA
+data$freq_BewertenF <- NA
+data$freq_BegründenF <- NA
+data$freq_AlternativeF <- NA
+
+fid$freq_KF <- NA
+fid$freq_LU <- NA
+fid$freq_FD <- NA
+fid$freq_SA <- NA
+fid$freq_AB <- NA
+fid$freq_T <- NA
+fid$freq_S <- NA
+fid$freq_FF <- NA
+fid$freq_Beschreiben <- NA
+fid$freq_Bewerten <- NA
+fid$freq_Begründen <- NA
+fid$freq_Alternative <- NA
+fid$freq_BeschreibenT <- NA
+fid$freq_BewertenT <- NA
+fid$freq_BegründenT <- NA
+fid$freq_AlternativeT <- NA
+fid$freq_BewertenF <- NA
+fid$freq_BegründenF <- NA
+fid$freq_AlternativeF <- NA
+
+### Kommentare Transkript markieren
+pos <- NA
+a=1
+for(i in 1:nrow(data.offen)){
+  if(data.offen$cid[i]==7){
+    file <- which(data.offen$fid[i]==data.offen$fid) #andere Kommentare der Gleichen Person
+    i1 <- which(data.offen$selfirst[i]<=data.offen$selfirst)
+    i2 <- which(data.offen$selend[i]>=data.offen$selend)
+    
+    for(j in 1:length(file)){
+      if(any(file[j]==i1)){
+        if(any(file[j]==i2)){
+          pos[a] <- file[j]
+          a=a+1
+        }
+      }
+    }
+  }
+}
+
+data.offen$Transkript <- NA
+data.offen$Transkript[pos] <- TRUE
+
+pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="8") #Position Beschreiben & Transkript
+data.offen$cid[pos] <- 13
+pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="9") #Position Bewerten & Transkript
+data.offen$cid[pos] <- 14
+pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="10") #Position Begründen & Transkript
+data.offen$cid[pos] <- 15
+pos <- which(data.offen$cid[which(data.offen$Transkript==T)]=="11") #Position Alternative & Transkript
+data.offen$cid[pos] <- 16
+
+
+### Kommentare fachlicher Fehler markieren
+pos <- NA
+a=1
+for(i in 1:nrow(data.offen)){
+  if(data.offen$cid[i]==12){
+    file <- which(data.offen$fid[i]==data.offen$fid) #andere Kommentare der Gleichen Person
+    i1 <- which(data.offen$selfirst[i]<=data.offen$selfirst)
+    i2 <- which(data.offen$selend[i]>=data.offen$selend)
+    
+    for(j in 1:length(file)){
+      if(any(file[j]==i1)){
+        if(any(file[j]==i2)){
+          pos[a] <- file[j]
+          a=a+1
+        }
+      }
+    }
+  }
+}
+
+data.offen$Fehler <- NA
+data.offen$Fehler[pos] <- TRUE
+
+pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="9") #Position Bewerten & Transkript
+data.offen$cid[pos] <- 17
+pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="10") #Position Begründen & Transkript
+data.offen$cid[pos] <- 18
+pos <- which(data.offen$cid[which(data.offen$Fehler==T)]=="11") #Position Alternative & Transkript
+data.offen$cid[pos] <- 19
+
+##Summenwerte der einzelnen Ausprägungen bilden
+same.fid <- NA
+for(i in 1:nrow(fid)){
+  if(length(which(data.offen$fid==fid$name[i]))!=0){
+    same.fid <- which(data.offen$fid==fid$name[i])
+    table <- table(data.offen$cid[same.fid])
+    for(j in 1:length(names(table))){
+      if(names(table)[j]=="1"){
+        fid$freq_KF[i] <- table[j]
+      }
+      if(names(table)[j]=="2"){
+        fid$freq_LU[i] <- table[j]
+      }
+      if(names(table)[j]=="3"){
+        fid$freq_FD[i] <- table[j]
+      }
+      if(names(table)[j]=="4"){
+        fid$freq_SA[i] <- table[j]
+      }
+      if(names(table)[j]=="5"){
+        fid$freq_AB[i] <- table[j]
+      }
+      if(names(table)[j]=="6"){
+        fid$freq_S[i] <- table[j]
+      }
+      if(names(table)[j]=="7"){
+        fid$freq_T[i] <- table[j]
+      }
+      if(names(table)[j]=="8"){
+        fid$freq_Beschreiben[i] <- table[j]
+      }
+      if(names(table)[j]=="9"){
+        fid$freq_Bewerten[i] <- table[j]
+      }
+      if(names(table)[j]=="10"){
+        fid$freq_Begründen[i] <- table[j]
+      }
+      if(names(table)[j]=="11"){
+        fid$freq_Alternative[i] <- table[j]
+      }
+      if(names(table)[j]=="12"){
+        fid$freq_FF[i] <- table[j]
+      }
+      if(names(table)[j]=="13"){
+        fid$freq_BeschreibenT[i] <- table[j]/2
+      }
+      if(names(table)[j]=="14"){
+        fid$freq_BewertenT[i] <- table[j]/2
+      }
+      if(names(table)[j]=="15"){
+        fid$freq_BegründenT[i] <- table[j]/2
+      }
+      if(names(table)[j]=="16"){
+        fid$freq_AlternativeT[i] <- table[j]/2
+      }
+      if(names(table)[j]=="17"){
+        fid$freq_BewertenF[i] <- table[j]*0
+      }
+      if(names(table)[j]=="18"){
+        fid$freq_BegründenF[i] <- table[j]*0
+      }
+      if(names(table)[j]=="19"){
+        fid$freq_AlternativeF[i] <- table[j]*0
+      }
+    }
+  }
+}
+
+## Häufigkeiten in Datensatz kopieren ###
+for(i in 1:nrow(fid)){
+  pos <- which(data$code==fid$name[i])
+  data$freq_KF[pos] <- fid$freq_KF[i]
+  data$freq_LU[pos] <- fid$freq_LU[i]
+  data$freq_FD[pos] <- fid$freq_FD[i]
+  data$freq_SA[pos] <- fid$freq_SA[i]
+  data$freq_AB[pos] <- fid$freq_AB[i]
+  data$freq_S[pos] <- fid$freq_S[i]
+  data$freq_T[pos] <- fid$freq_T[i]
+  data$freq_Beschreiben[pos] <- fid$freq_Beschreiben[i]
+  data$freq_Bewerten[pos] <- fid$freq_Bewerten[i]
+  data$freq_Begründen[pos] <- fid$freq_Begründen[i]
+  data$freq_Alternative[pos] <- fid$freq_Alternative[i]
+  data$freq_BeschreibenT[pos] <- fid$freq_BeschreibenT[i]
+  data$freq_BewertenT[pos] <- fid$freq_BewertenT[i]
+  data$freq_BegründenT[pos] <- fid$freq_BegründenT[i]
+  data$freq_AlternativeT[pos] <- fid$freq_AlternativeT[i]
+  data$freq_BewertenF[pos] <- fid$freq_BewertenF[i]
+  data$freq_BegründenF[pos] <- fid$freq_BegründenF[i]
+  data$freq_AlternativeF[pos] <- fid$freq_AlternativeF[i]
+}
+
+## relative Häufigkeiten
+data$rel_KF <- data$freq_KF/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+data$rel_LU <- data$freq_LU/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+data$rel_FD <- data$freq_FD/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+data$rel_SA <- data$freq_SA/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+data$rel_AB <- data$freq_AB/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+data$rel_S <- data$freq_S/rowSums(data[,c("freq_KF","freq_LU","freq_FD","freq_SA","freq_AB","freq_S")], na.rm = T)
+
+data$rel_KF[which(is.na(data$rel_KF))] <- 0
+data$rel_LU[which(is.na(data$rel_LU))] <- 0
+data$rel_FD[which(is.na(data$rel_FD))] <- 0
+data$rel_SA[which(is.na(data$rel_SA))] <- 0
+data$rel_AB[which(is.na(data$rel_AB))] <- 0
+data$rel_S[which(is.na(data$rel_S))] <- 0
+
+
+data$rel_Beschreiben <- data$freq_Beschreiben/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
+data$rel_Bewerten <- data$freq_Bewerten/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
+data$rel_Begründen <- data$freq_Begründen/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
+data$rel_Alternative <- data$freq_Alternative/(rowSums(data[,c("freq_Beschreiben","freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)
+data$rel_Beschreiben[which(is.na(data$rel_Beschreiben))] <- 0
+data$rel_Beschreiben[which(data$rel_Beschreiben==0 & is.na(data$rel_Bewerten) & is.na(data$rel_Begründen) & is.na(data$rel_Alternative))] <- NA
+
+data$freq_Beschreiben[which(is.na(data$freq_Beschreiben))] <- 0
+data$freq_BeschreibenT[which(is.na(data$freq_BeschreibenT))] <- 0
+data$freq_Bewerten[which(is.na(data$freq_Bewerten))] <- 0
+data$freq_BewertenT[which(is.na(data$freq_BewertenT))] <- 0
+data$freq_Begründen[which(is.na(data$freq_Begründen))] <- 0
+data$freq_BegründenT[which(is.na(data$freq_BegründenT))] <- 0
+data$freq_Alternative[which(is.na(data$freq_Alternative))] <- 0
+data$freq_AlternativeT[which(is.na(data$freq_AlternativeT))] <- 0
+data$freq_BewertenF[which(is.na(data$freq_BewertenF))] <- 0
+data$freq_BegründenF[which(is.na(data$freq_BegründenF))] <- 0
+data$freq_AlternativeF[which(is.na(data$freq_AlternativeF))] <- 0
+
+## Score Ebene
+data$Score.Ebene <- (rowSums(data[,c("freq_Bewerten","freq_Begründen", "freq_Alternative")],na.rm = T)+rowSums(data[,c("freq_BewertenT","freq_BegründenT", "freq_AlternativeT")],na.rm = T)*0.5+rowSums(data[,c("freq_BewertenF","freq_BegründenF", "freq_AlternativeF")],na.rm = T)*0)*2+data$freq_Beschreiben+data$freq_BeschreibenT*0.5 #mit Beschreiben
 
 ###### Itemanalyse (Kapitel 5) ######
 data.items <- data[,187:282]
